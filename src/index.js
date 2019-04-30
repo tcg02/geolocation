@@ -9,25 +9,45 @@ const port = process.env.PORT || 3000
 
 app.use(express.json())
 
-app.get('/location/:lat/:lng', async (req,res)=>{
-    try{
-        const lat = req.params.lat  
-        const lng = req.params.lng  
-
-        if(!lat || !lng){
-            res.status(400).send(e)
+app.get('/location/', async (req,res)=>{    
+    try{ 
+        const lat = req.query.lat  
+        const lng = req.query.lng    
+        const zip = req.query.zip   
+        
+        
+        if(!((lat && lng) || zip)){
+            return res.status(400).send(e)
         }
 
-        const location = await Location.find({
-            "lat":lat,
-            "lng":lng
-        })
+        let foundlocation
 
-        if(!location){
+        if(lat && lng){
+            foundlocation = await Location.find({
+                location:{
+                    $near:{
+                        $geometry:{
+                            type: "Point",
+                            coordinates: [lng, lat]
+                        },                         
+                        $maxDistance: 5000
+
+                    }                    
+                }
+            })
+        }
+        
+        if(zip){
+            foundlocation = await Location.findOne({
+                "zip":zip               
+            })
+        }
+
+        if(!foundlocation){
             return res.status(404).send()
         }
 
-        res.send(location)
+        res.send(foundlocation)
     }catch(e){
         res.status(500).send(e)
     }

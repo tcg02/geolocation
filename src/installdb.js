@@ -18,13 +18,19 @@ mongoose.connect(`mongodb://127.0.0.1:27017/${DBNAME}`, {
 mongoose.Promise = global.Promise;
 
 const db = mongoose.connection;
+
+
+
 let arrayOfLocations = [];
 
 db.on('open', () => {
   console.log('Connected to mongo server.\n');
   process.stdout.write('Processing.');
-  const dataStreamFromFile = fs.createReadStream(`${__dirname}/dbDump/uszips.min.json`);
+  const dataStreamFromFile = fs.createReadStream(`${__dirname}/../dbDump/uszips.min.json`);
   dataStreamFromFile.pipe(JSONStream.parse('*')).on('data', async (LocationData) => {
+
+    LocationData['location'] = [LocationData.lng, LocationData.lat]
+
     arrayOfLocations.push(LocationData);
     if (arrayOfLocations.length === 1000) {
       dataStreamFromFile.pause();
@@ -36,12 +42,17 @@ db.on('open', () => {
   });
 
   dataStreamFromFile.on('end', async () => {
-    await Location.insertMany(arrayOfLocations); // left over data
-    console.log('\nImport complete, closing connection...');
+    await Location.insertMany(arrayOfLocations)
+
+    //await db.locations.index({location:"2dsphere"})
+       
+    console.log('\nImport complete, closing connection...');  
+    
     db.close();
     process.exit(0);
   });
 });
+
 
 db.on('error', (err) => {
   console.error('MongoDB connection error: ', err);

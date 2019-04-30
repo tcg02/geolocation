@@ -3,12 +3,10 @@ const mongoose = require('mongoose')
 const Locations = mongoose.model('Locations',{
     zip:{
         type:Number
-    },
-    lat:{
-        type:Number        
-    },
-    lng:{
-        type:Number
+    },    
+    location:{
+        index: '2dsphere',        
+        type: [Number]
     },
     city:{
         type: String
