@@ -6,7 +6,7 @@ const DBNAME = "uszips"
 const fs = require('fs');
 const mongoose = require('mongoose');
 const JSONStream = require('JSONStream');
-const Location = require('./src/models/Locations');
+const Location = require('./models/Locations');
  
 
 mongoose.connect(`mongodb://127.0.0.1:27017/${DBNAME}`, {

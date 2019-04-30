@@ -1,7 +1,7 @@
 const express = require('express')
 require('./db/mongoose')
 
-const Location = require('./src/models/Locations')
+const Location = require('./models/Locations')
 
 const app = express()
 

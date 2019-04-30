@@ -14,3 +14,5 @@ b. Query
 Second part will use the installed mongodb database to get location detail by latitude & longitude or by zipcode. 
 
 RUN >> npm run prod
+
+RUN>> npm run dev

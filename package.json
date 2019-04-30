@@ -2,10 +2,11 @@
   "name": "geolocationdb",
   "version": "1.0.0",
   "description": "Get address by latitude and longitude",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "run": "node app.js"
+    "installdb" : "node src/installdb.js",
+    "dev": "nodemon src/index.js",
+    "run": "node src/app.js"
   },
   "keywords": [],
   "author": "sdahal",
